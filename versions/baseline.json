@@ -616,6 +616,7 @@
       "baseline": "3.0.4",
       "port-version": 0
     },
+    "boost": {
       "baseline": "1.78.0",
       "port-version": 0
     },
@@ -1920,7 +1921,7 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.0.1",
+      "baseline": "7.79.1",
       "port-version": 0
     },
     "curlpp": {
