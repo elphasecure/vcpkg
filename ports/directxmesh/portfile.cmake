@@ -1,4 +1,4 @@
-set(DIRECTXMESH_TAG mar2023)
+set(DIRECTXMESH_TAG dec2023)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
     REF ${DIRECTXMESH_TAG}
-    SHA512 a017f022945a078a27c19815100f466714b9cbdad067dfa36b8e457ec78b8febcb7661dee55e3d7ee41461325f0af9c442c04c0e8e406c268062ce96b46b7af8
+    SHA512 25442ec60040f2f232079b4a62a4460c8de11a881e36f5bdaeadbe98678d360141e8eca8162169941c03884cc2a05c3e20cf7fd2aef6518f6a647b7382d6d271
     HEAD_REF main
 )
 
@@ -18,16 +18,19 @@ vcpkg_check_features(
         tools BUILD_TOOLS
 )
 
+set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
+
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS} -DBUILD_TESTING=OFF
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/directxmesh)
 
 if("tools" IN_LIST FEATURES)
@@ -40,7 +43,7 @@ if("tools" IN_LIST FEATURES)
       MESHCONVERT_EXE
       URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert.exe"
       FILENAME "meshconvert-${DIRECTXMESH_TAG}.exe"
-      SHA512 bb7ab1014f99f3c2a9c0b6b22333fa2aaeed952fa1fe0f675a5b53cf227385e6492a73dc34f0df9a80f0cde2ba3353d0ceca2520c3ca8efb61e2dcbe42065d40
+      SHA512 db2d32ec44993547881e2f14ee3403aa6133758d250ffc54b7cec9c1f15be46e5a5d847eb1cff60081bdfeaaa1e6be129475f40502c0a8c5ba2d58e5baa71691
     )
 
     file(INSTALL
@@ -55,7 +58,7 @@ if("tools" IN_LIST FEATURES)
       MESHCONVERT_EXE
       URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert_arm64.exe"
       FILENAME "meshconvert-${DIRECTXMESH_TAG}-arm64.exe"
-      SHA512 401a132d6c70dd07c1377cbef3bce53cb27bfa48344409cbb4ace9f266f17ea3221ea43f45f0e502f6a26608e108251eda89900dd2ae88eb3894ac54176d152a
+      SHA512 deaa61a1f24bf1ffff817a7b72b125d2402b97ca15713411eb3a5b0af0b5f2b25407be87d2fd60fb4670744656230d221183510167a1696685d2def9fa9c1532
     )
 
     file(INSTALL
@@ -76,4 +79,5 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
